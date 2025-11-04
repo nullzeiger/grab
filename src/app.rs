@@ -158,18 +158,14 @@ pub fn search_apps(query: &str) -> Result<Vec<(usize, App)>> {
     Ok(results)
 }
 
-pub fn list_apps(limit: Option<usize>) -> Result<Vec<(usize, App)>> {
+pub fn list_apps() -> Result<Vec<(usize, App)>> {
     let apps = storage::load_apps()?;
 
-    let mut results: Vec<(usize, App)> = apps
+    let results: Vec<(usize, App)> = apps
         .into_iter()
         .enumerate()
         .map(|(i, app)| (i + 1, app))
         .collect();
-
-    if let Some(lim) = limit {
-        results.truncate(lim);
-    }
 
     Ok(results)
 }

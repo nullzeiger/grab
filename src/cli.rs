@@ -20,7 +20,7 @@ pub enum Commands {
     Add(AddArgs),
     Check,
     Download,
-    List(ListArgs),
+    List,
     Remove(RemoveArgs),
     Search(SearchArgs),
 }
@@ -66,12 +66,6 @@ impl AddArgs {
                 .ok_or_else(|| GrabError::InvalidInput("Version flag is required".into()))?,
         )
     }
-}
-
-#[derive(Args, Debug)]
-pub struct ListArgs {
-    #[arg(short, long)]
-    pub limit: Option<usize>,
 }
 
 #[derive(Args, Debug)]

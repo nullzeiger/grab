@@ -31,7 +31,7 @@ async fn run() -> Result<()> {
         Commands::Add(args) => handlers::handle_add(args),
         Commands::Check => handlers::handle_check().await,
         Commands::Download => handlers::handle_download().await,
-        Commands::List(args) => handlers::handle_list(args),
+        Commands::List => handlers::handle_list(),
         Commands::Remove(args) => handlers::handle_remove(args),
         Commands::Search(args) => handlers::handle_search(args),
     }

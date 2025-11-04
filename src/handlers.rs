@@ -1,20 +1,15 @@
 use crate::app;
-use crate::cli::{AddArgs, ListArgs, RemoveArgs, SearchArgs};
+use crate::cli::{AddArgs, RemoveArgs, SearchArgs};
 use crate::error::{GrabError, Result};
 use crate::models::App;
 use crate::ui;
 
-pub fn handle_list(args: ListArgs) -> Result<()> {
-    let apps = app::list_apps(args.limit)?;
+pub fn handle_list() -> Result<()> {
+    let apps = app::list_apps()?;
 
     if apps.is_empty() {
         println!("No apps stored yet. Use `grab add` to add one.");
         return Ok(());
-    }
-
-    match args.limit {
-        Some(limit) => println!("Showing first {} app(s):", limit),
-        None => println!("All stored apps:"),
     }
 
     println!();
@@ -43,7 +38,7 @@ pub fn handle_add(args: AddArgs) -> Result<()> {
 }
 
 pub fn handle_remove(args: RemoveArgs) -> Result<()> {
-    let apps = app::list_apps(None)?;
+    let apps = app::list_apps()?;
     let app_to_delete = apps.iter().find(|(idx, _)| *idx == args.index);
 
     match app_to_delete {
