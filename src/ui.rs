@@ -1,3 +1,4 @@
+use crate::error::Result;
 use crate::models::App;
 use std::io::{self, Write};
 
@@ -12,7 +13,7 @@ pub fn print_apps(apps: &[(usize, App)]) {
     }
 }
 
-pub fn prompt_for_input(prompt: &str, required: bool) -> io::Result<String> {
+pub fn prompt_for_input(prompt: &str, required: bool) -> Result<String> {
     loop {
         print_prompt(prompt)?;
         let mut input = String::new();
@@ -28,7 +29,7 @@ pub fn prompt_for_input(prompt: &str, required: bool) -> io::Result<String> {
     }
 }
 
-pub fn confirm_action(message: &str) -> io::Result<bool> {
+pub fn confirm_action(message: &str) -> Result<bool> {
     loop {
         print_prompt(&format!("{} (y/N)", message))?;
         let mut input = String::new();
@@ -41,7 +42,7 @@ pub fn confirm_action(message: &str) -> io::Result<bool> {
     }
 }
 
-fn print_prompt(message: &str) -> io::Result<()> {
+fn print_prompt(message: &str) -> Result<()> {
     print!("{}: ", message);
-    io::stdout().flush()
+    Ok(io::stdout().flush()?)
 }

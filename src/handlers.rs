@@ -92,9 +92,6 @@ fn collect_app_interactively(args: AddArgs) -> Result<App> {
 fn get_or_prompt(field: Option<String>, label: &str) -> Result<String> {
     match field {
         Some(val) => Ok(val),
-        None => ui::prompt_for_input(label, true).map_err(|e| {
-            eprintln!("Failed to read input: {}", e);
-            GrabError::Io(e)
-        }),
+        None => Ok(ui::prompt_for_input(label, true)?),
     }
 }
