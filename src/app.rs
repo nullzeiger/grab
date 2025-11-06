@@ -6,7 +6,6 @@ use crate::github_version::Version;
 use crate::models::App;
 use crate::storage;
 use std::process::Output;
-use std::sync::Arc;
 use tokio::process::Command;
 
 async fn command(name: &str, flag: &str) -> Result<Output> {
@@ -35,13 +34,12 @@ pub fn add_app(app: App) -> Result<()> {
 }
 
 pub async fn check_apps() -> Result<()> {
-    let request_client = RequestClient::new()?;
-    let client = Arc::new(request_client);
+    let client = RequestClient::new()?;
     let apps = storage::load_apps()?;
     let mut tasks = tokio::task::JoinSet::new();
 
     for app in apps {
-        let client = Arc::clone(&client);
+        let client = client.clone();
 
         tasks.spawn(async move {
             let version_output = command(&app.name, &app.version_flag).await?;
@@ -85,8 +83,7 @@ pub async fn check_apps() -> Result<()> {
 }
 
 pub async fn download_apps(app_name: Option<&App>) -> Result<()> {
-    let request_client = RequestClient::new()?;
-    let client = Arc::new(request_client);
+    let client = RequestClient::new()?;
 
     if let Some(app) = app_name {
         github_release::download_latest_asset(&client, &app.owner, &app.repo, &app.asset_pattern)
@@ -98,7 +95,7 @@ pub async fn download_apps(app_name: Option<&App>) -> Result<()> {
     let mut tasks = tokio::task::JoinSet::new();
 
     for app in apps {
-        let client = Arc::clone(&client);
+        let client = client.clone();
         tasks.spawn(async move {
             github_release::download_latest_asset(
                 &client,

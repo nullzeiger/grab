@@ -1,6 +1,6 @@
 use crate::client::RequestClient;
 use crate::error::{GrabError, Result};
-use crate::github_latest_release_url;
+use crate::client::github_latest_release_url;
 use serde::Deserialize;
 use tokio::fs::File as TokioFile;
 use tokio::io::AsyncWriteExt;
@@ -17,7 +17,7 @@ pub struct Asset {
 }
 
 async fn get_latest_release(client: &RequestClient, owner: &str, repo: &str) -> Result<Release> {
-    let url = github_latest_release_url!(owner, repo);
+    let url = github_latest_release_url(owner, repo);
     let release: Release = client.get_json(&url).await?;
     Ok(release)
 }
