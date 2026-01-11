@@ -1,5 +1,5 @@
 use crate::app;
-use crate::cli::{AddArgs, RemoveArgs, SearchArgs};
+use crate::cli::{AddArgs, RemoteArgs, RemoveArgs, SearchArgs};
 use crate::error::{GrabError, Result};
 use crate::models::App;
 use crate::ui;
@@ -22,7 +22,7 @@ pub async fn handle_check() -> Result<()> {
 }
 
 pub async fn handle_download() -> Result<()> {
-    app::download_apps(None).await
+    app::download_apps().await
 }
 
 pub fn handle_add(args: AddArgs) -> Result<()> {
@@ -35,6 +35,14 @@ pub fn handle_add(args: AddArgs) -> Result<()> {
     app::add_app(app)?;
     println!("App added successfully!");
     Ok(())
+}
+
+pub(crate) async fn handle_remote_download(args: RemoteArgs) -> Result<()> {
+    let file = args.file.filter(|q| !q.trim().is_empty()).ok_or_else(|| {
+        GrabError::InvalidInput("Please provide a non-empty remote file.".to_string())
+    })?;
+
+    app::download_remote_apps(file).await
 }
 
 pub fn handle_remove(args: RemoveArgs) -> Result<()> {
@@ -60,6 +68,8 @@ pub fn handle_remove(args: RemoveArgs) -> Result<()> {
 }
 
 pub fn handle_search(args: SearchArgs) -> Result<()> {
+    println!("args search {:?}", args);
+
     let query = args.query.filter(|q| !q.trim().is_empty()).ok_or_else(|| {
         GrabError::InvalidInput("Please provide a non-empty search query.".to_string())
     })?;

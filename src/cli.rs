@@ -21,6 +21,7 @@ pub enum Commands {
     Check,
     Download,
     List,
+    Remote(RemoteArgs),
     Remove(RemoveArgs),
     Search(SearchArgs),
 }
@@ -66,6 +67,12 @@ impl AddArgs {
                 .ok_or_else(|| GrabError::InvalidInput("Version flag is required".into()))?,
         )
     }
+}
+
+#[derive(Args, Debug)]
+pub struct RemoteArgs {
+    #[arg(short, long)]
+    pub file: Option<String>,
 }
 
 #[derive(Args, Debug)]

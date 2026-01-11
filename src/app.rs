@@ -4,6 +4,7 @@ use crate::error::{GrabError, Result};
 use crate::github_release;
 use crate::github_version::Version;
 use crate::models::App;
+use crate::remote;
 use crate::storage;
 use std::process::Output;
 use tokio::process::Command;
@@ -82,14 +83,8 @@ pub async fn check_apps() -> Result<()> {
     Ok(())
 }
 
-pub async fn download_apps(app_name: Option<&App>) -> Result<()> {
+pub async fn download_apps() -> Result<()> {
     let client = RequestClient::new()?;
-
-    if let Some(app) = app_name {
-        github_release::download_latest_asset(&client, &app.owner, &app.repo, &app.asset_pattern)
-            .await?;
-        return Ok(());
-    }
 
     let apps = storage::load_apps()?;
     let mut tasks = tokio::task::JoinSet::new();
@@ -165,4 +160,30 @@ pub fn list_apps() -> Result<Vec<(usize, App)>> {
         .collect();
 
     Ok(results)
+}
+
+pub(crate) async fn download_remote_apps(file: String) -> Result<()> {
+    let client = RequestClient::new()?;
+
+    let apps = remote::load_apps(&client, &file).await?;
+    let mut tasks = tokio::task::JoinSet::new();
+
+    for app in apps {
+        let client = client.clone();
+        tasks.spawn(async move {
+            github_release::download_latest_asset(
+                &client,
+                &app.owner,
+                &app.repo,
+                &app.asset_pattern,
+            )
+            .await
+        });
+    }
+
+    while let Some(result) = tasks.join_next().await {
+        result.map_err(GrabError::TaskJoin)??;
+    }
+
+    Ok(())
 }

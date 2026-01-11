@@ -10,6 +10,7 @@ mod github_release;
 mod github_version;
 mod handlers;
 mod models;
+mod remote;
 mod storage;
 mod ui;
 
@@ -31,6 +32,7 @@ async fn run() -> Result<()> {
         Commands::Add(args) => handlers::handle_add(args),
         Commands::Check => handlers::handle_check().await,
         Commands::Download => handlers::handle_download().await,
+        Commands::Remote(args) => handlers::handle_remote_download(args).await,
         Commands::List => handlers::handle_list(),
         Commands::Remove(args) => handlers::handle_remove(args),
         Commands::Search(args) => handlers::handle_search(args),
