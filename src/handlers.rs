@@ -1,5 +1,5 @@
 use crate::app;
-use crate::cli::{AddArgs, RemoteArgs, RemoveArgs, SearchArgs};
+use crate::cli::{AddArgs, CheckArgs, RemoteArgs, RemoveArgs, SearchArgs};
 use crate::error::{GrabError, Result};
 use crate::models::App;
 use crate::ui;
@@ -17,8 +17,8 @@ pub fn handle_list() -> Result<()> {
     Ok(())
 }
 
-pub async fn handle_check() -> Result<()> {
-    app::check_apps().await
+pub async fn handle_check(args: CheckArgs) -> Result<()> {
+    app::check_apps(args.download).await
 }
 
 pub async fn handle_download() -> Result<()> {

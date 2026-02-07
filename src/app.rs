@@ -34,7 +34,7 @@ pub fn add_app(app: App) -> Result<()> {
     storage::save_apps(&apps)
 }
 
-pub async fn check_apps() -> Result<()> {
+pub async fn check_apps(download: bool) -> Result<()> {
     let client = RequestClient::new()?;
     let apps = storage::load_apps()?;
     let mut tasks = tokio::task::JoinSet::new();
@@ -56,7 +56,7 @@ pub async fn check_apps() -> Result<()> {
                 app.name, local_version, latest_version.tag_name, latest_version.html_url
             );
 
-            if !compare.is_latest {
+            if !compare.is_latest && download {
                 println!(
                     "Update available for {} — downloading latest release...\n",
                     app.name

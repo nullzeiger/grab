@@ -15,6 +15,7 @@ impl Compare {
         let release_match = VERSION_RE
             .find(release)
             .ok_or_else(|| GrabError::InvalidRegexInput("Invalid release version".to_string()))?;
+
         let version_match = VERSION_RE
             .find(version)
             .ok_or_else(|| GrabError::InvalidRegexInput("Invalid current version".to_string()))?;

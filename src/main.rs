@@ -30,7 +30,7 @@ async fn run() -> Result<()> {
 
     match cli.command {
         Commands::Add(args) => handlers::handle_add(args),
-        Commands::Check => handlers::handle_check().await,
+        Commands::Check(args) => handlers::handle_check(args).await,
         Commands::Download => handlers::handle_download().await,
         Commands::Remote(args) => handlers::handle_remote_download(args).await,
         Commands::List => handlers::handle_list(),

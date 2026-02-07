@@ -3,11 +3,7 @@ use reqwest::Client;
 use serde::de::DeserializeOwned;
 use std::time::Duration;
 
-const APP_USER_AGENT: &str = concat!(
-    env!("CARGO_PKG_NAME"),
-    "/",
-    env!("CARGO_PKG_VERSION"),
-);
+const APP_USER_AGENT: &str = concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
 
 pub fn github_latest_release_url(owner: &str, repo: &str) -> String {
     format!(

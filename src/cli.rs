@@ -18,7 +18,7 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     Add(AddArgs),
-    Check,
+    Check(CheckArgs),
     Download,
     List,
     Remote(RemoteArgs),
@@ -67,6 +67,12 @@ impl AddArgs {
                 .ok_or_else(|| GrabError::InvalidInput("Version flag is required".into()))?,
         )
     }
+}
+
+#[derive(Args, Debug)]
+pub struct CheckArgs {
+    #[arg(short, long)]
+    pub download: bool,
 }
 
 #[derive(Args, Debug)]
