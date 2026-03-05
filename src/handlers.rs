@@ -37,7 +37,7 @@ pub fn handle_add(args: AddArgs) -> Result<()> {
     Ok(())
 }
 
-pub(crate) async fn handle_remote_download(args: RemoteArgs) -> Result<()> {
+pub async fn handle_remote_download(args: RemoteArgs) -> Result<()> {
     let file = args.file.filter(|q| !q.trim().is_empty()).ok_or_else(|| {
         GrabError::InvalidInput("Please provide a non-empty remote file.".to_string())
     })?;
@@ -68,7 +68,7 @@ pub fn handle_remove(args: RemoveArgs) -> Result<()> {
 }
 
 pub fn handle_search(args: SearchArgs) -> Result<()> {
-    println!("args search {:?}", args);
+    println!("args search {}", args);
 
     let query = args.query.filter(|q| !q.trim().is_empty()).ok_or_else(|| {
         GrabError::InvalidInput("Please provide a non-empty search query.".to_string())
@@ -77,7 +77,7 @@ pub fn handle_search(args: SearchArgs) -> Result<()> {
     let results = app::search_apps(&query)?;
 
     if results.is_empty() {
-        println!("No apps found matching '{}'", query);
+        println!("No apps found matching '{query}'");
     } else {
         println!("Found {} app(s) matching '{}':\n", results.len(), query);
         ui::print_apps(&results);

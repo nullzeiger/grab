@@ -87,6 +87,7 @@ pub async fn download_apps() -> Result<()> {
     let client = RequestClient::new()?;
 
     let apps = storage::load_apps()?;
+
     let mut tasks = tokio::task::JoinSet::new();
 
     for app in apps {

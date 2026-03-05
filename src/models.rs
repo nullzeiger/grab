@@ -55,3 +55,114 @@ impl fmt::Display for App {
         )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn make_valid_app() -> App {
+        App::new(
+            "ripgrep",
+            "BurntSushi",
+            "ripgrep",
+            "ripgrep-linux",
+            "--version",
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn test_valid_app_creates_successfully() {
+        let app = make_valid_app();
+        assert_eq!(app.name, "ripgrep");
+        assert_eq!(app.owner, "BurntSushi");
+        assert_eq!(app.repo, "ripgrep");
+        assert_eq!(app.asset_pattern, "ripgrep-linux");
+        assert_eq!(app.version_flag, "--version");
+    }
+
+    #[test]
+    fn test_whitespace_only_name_is_invalid() {
+        let result = App::new("   ", "owner", "repo", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Name")));
+    }
+
+    #[test]
+    fn test_empty_name_is_invalid() {
+        let result = App::new("", "owner", "repo", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Name")));
+    }
+
+    #[test]
+    fn test_whitespace_only_owner_is_invalid() {
+        let result = App::new("name", "   ", "repo", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Owner")));
+    }
+
+    #[test]
+    fn test_empty_owner_is_invalid() {
+        let result = App::new("name", "", "repo", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Owner")));
+    }
+
+    #[test]
+    fn test_whitespace_only_repo_is_invalid() {
+        let result = App::new("name", "owner", "\t", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Repo")));
+    }
+
+    #[test]
+    fn test_empty_repo_is_invalid() {
+        let result = App::new("name", "owner", "", "pattern", "--version");
+        assert!(matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Repo")));
+    }
+
+    #[test]
+    fn test_whitespace_only_asset_pattern_is_invalid() {
+        let result = App::new("name", "owner", "repo", "  ", "--version");
+        assert!(
+            matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Asset pattern"))
+        );
+    }
+
+    #[test]
+    fn test_empty_asset_pattern_is_invalid() {
+        let result = App::new("name", "owner", "repo", "", "--version");
+        assert!(
+            matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Asset pattern"))
+        );
+    }
+
+    #[test]
+    fn test_whitespace_only_version_flag_is_invalid() {
+        let result = App::new("name", "owner", "repo", "pattern", "   ");
+        assert!(
+            matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Version flag"))
+        );
+    }
+
+    #[test]
+    fn test_empty_version_flag_is_invalid() {
+        let result = App::new("name", "owner", "repo", "pattern", "");
+        assert!(
+            matches!(result, Err(GrabError::InvalidInput(msg)) if msg.contains("Version flag"))
+        );
+    }
+
+    #[test]
+    fn test_fields_are_trimmed_on_creation() {
+        let app = App::new(
+            "  ripgrep  ",
+            "  BurntSushi  ",
+            "  ripgrep  ",
+            "  linux  ",
+            "  --version  ",
+        )
+        .unwrap();
+        assert_eq!(app.name, "ripgrep");
+        assert_eq!(app.owner, "BurntSushi");
+        assert_eq!(app.repo, "ripgrep");
+        assert_eq!(app.asset_pattern, "linux");
+        assert_eq!(app.version_flag, "--version");
+    }
+}

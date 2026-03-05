@@ -1,6 +1,6 @@
 use crate::client::RequestClient;
-use crate::error::{GrabError, Result};
 use crate::client::github_latest_release_url;
+use crate::error::{GrabError, Result};
 use serde::Deserialize;
 use tokio::fs::File as TokioFile;
 use tokio::io::AsyncWriteExt;

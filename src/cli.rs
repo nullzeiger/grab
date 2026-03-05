@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::error::{GrabError, Result};
 use crate::models::App;
 use clap::{Args, Parser, Subcommand};
@@ -91,4 +93,14 @@ pub struct RemoveArgs {
 pub struct SearchArgs {
     #[arg(short, long)]
     pub query: Option<String>,
+}
+
+impl fmt::Display for SearchArgs {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "SearchArgs {{ query: {} }}",
+            self.query.as_deref().unwrap_or("None")
+        )
+    }
 }
