@@ -476,7 +476,6 @@ dependencies = [
  "clap",
  "color-eyre",
  "directories",
- "once_cell",
  "regex",
  "reqwest",
  "serde",

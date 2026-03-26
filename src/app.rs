@@ -37,6 +37,9 @@ pub fn add_app(app: App) -> Result<()> {
 pub async fn check_apps(download: bool) -> Result<()> {
     let client = RequestClient::new()?;
     let apps = storage::load_apps()?;
+    if apps.is_empty() {
+        println!("No apps in the file {}", storage::get_name_file())
+    }
     let mut tasks = tokio::task::JoinSet::new();
 
     for app in apps {
@@ -85,9 +88,10 @@ pub async fn check_apps(download: bool) -> Result<()> {
 
 pub async fn download_apps() -> Result<()> {
     let client = RequestClient::new()?;
-
     let apps = storage::load_apps()?;
-
+    if apps.is_empty() {
+        println!("No apps in the file {}", storage::get_name_file())
+    }
     let mut tasks = tokio::task::JoinSet::new();
 
     for app in apps {

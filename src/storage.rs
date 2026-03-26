@@ -6,6 +6,10 @@ use std::path::{Path, PathBuf};
 
 const JSON_FILE: &str = ".apps.json";
 
+pub fn get_name_file() -> String {
+    return JSON_FILE.to_string();
+}
+
 fn get_json_path() -> Result<PathBuf> {
     if let Some(user_dirs) = UserDirs::new() {
         Ok(user_dirs.home_dir().join(JSON_FILE))
@@ -26,7 +30,7 @@ pub fn save_apps(apps: &[App]) -> Result<()> {
     save_apps_to(&path, apps)
 }
 
-pub fn load_apps_from(path: &Path) -> Result<Vec<App>> {
+fn load_apps_from(path: &Path) -> Result<Vec<App>> {
     if !path.exists() {
         return Ok(Vec::new());
     }

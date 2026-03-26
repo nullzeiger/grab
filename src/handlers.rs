@@ -12,7 +12,6 @@ pub fn handle_list() -> Result<()> {
         return Ok(());
     }
 
-    println!();
     ui::print_apps(&apps);
     Ok(())
 }

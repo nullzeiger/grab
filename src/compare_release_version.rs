@@ -1,12 +1,12 @@
 use crate::error::{GrabError, Result};
-use once_cell::sync::Lazy;
 use regex::Regex;
+use std::sync::LazyLock;
 
 pub struct Compare {
     pub is_latest: bool,
 }
 
-static VERSION_RE: Lazy<Regex> = Lazy::new(|| {
+static VERSION_RE: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"\d+\.\d+\.\d+").expect("Invalid regex check the version pattern syntax.")
 });
 
